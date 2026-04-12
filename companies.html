@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Companies You Should Know — Onsite Ops Quarterly</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ed;
+    --bg-warm: #eae6df;
+    --bg-card: #ffffff;
+    --bg-dark: #1c1c1c;
+    --text-primary: #1c1c1c;
+    --text-secondary: #5a5650;
+    --text-tertiary: #8a857e;
+    --border: #ddd8d0;
+    --border-light: #e8e4dc;
+    --accent: #b8935a;
+    --accent-hover: #a07e48;
+    --accent-light: rgba(184,147,90,0.1);
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Playfair Display', serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── SKIP LINK ─── */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 16px;
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    z-index: 200;
+    transition: top 0.2s;
+  }
+
+  .skip-link:focus { top: 16px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(245,242,237,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-light);
+    transition: all 0.4s ease;
+  }
+
+  nav.scrolled { padding: 14px 48px; }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.4s;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+
+  .nav-links a {
+    color: var(--text-tertiary);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--text-primary); }
+
+  .nav-subscribe {
+    background: var(--text-primary);
+    color: var(--bg) !important;
+    padding: 8px 20px;
+    font-weight: 700 !important;
+    transition: background 0.3s, transform 0.2s !important;
+  }
+
+  .nav-subscribe:hover {
+    background: var(--text-secondary);
+    transform: translateY(-1px);
+  }
+
+  /* ─── HAMBURGER ─── */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    z-index: 110;
+  }
+
+  .nav-hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--text-primary);
+    transition: transform 0.3s, opacity 0.3s, background 0.4s;
+  }
+
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  nav.menu-open {
+    background: var(--bg-dark) !important;
+    border-bottom-color: transparent !important;
+  }
+
+  nav.menu-open .nav-logo { color: #f0ede8; }
+  nav.menu-open .nav-hamburger span { background: #f0ede8; }
+
+  /* ─── MOBILE MENU ─── */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: var(--bg-dark);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+
+  .mobile-menu.open { opacity: 1; visibility: visible; }
+
+  .mobile-menu a {
+    color: rgba(240, 237, 232, 0.7);
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 16px 32px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s;
+  }
+
+  .mobile-menu a:hover { color: #f0ede8; }
+
+  .mobile-menu .mobile-subscribe {
+    margin-top: 16px;
+    background: var(--accent);
+    color: #fff;
+    padding: 16px 48px;
+    font-weight: 700;
+  }
+
+  .mobile-menu .mobile-subscribe:hover { background: var(--accent-hover); }
+
+  /* ─── PAGE HEADER ─── */
+  .page-header {
+    padding: 140px 48px 64px;
+    text-align: center;
+  }
+
+  .page-header-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+
+  .page-header-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(32px, 5vw, 56px);
+    color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+
+  .page-header-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--text-tertiary);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ─── DIRECTORY ─── */
+  .directory {
+    padding: 0 48px 120px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .dir-category {
+    margin-bottom: 56px;
+  }
+
+  .dir-category-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dir-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .dir-list li {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+  }
+
+  .dir-list li::after {
+    content: '\00B7';
+    margin: 0 12px;
+    color: var(--text-tertiary);
+  }
+
+  .dir-list li:last-child::after { content: ''; margin: 0; }
+
+  .dir-list a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+    line-height: 2;
+  }
+
+  .dir-list a:hover {
+    color: var(--accent);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 64px 48px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: var(--white);
+  }
+
+  .footer-brand { max-width: 300px; }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-tagline {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .footer-links { display: flex; gap: 48px; }
+
+  .footer-col h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .footer-col a {
+    display: block;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: color 0.3s;
+  }
+
+  .footer-col a:hover { color: var(--text-primary); }
+
+  .footer-bottom {
+    padding: 24px 48px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+    background: var(--white);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .mobile-menu { display: flex; }
+    .page-header { padding: 120px 24px 48px; }
+    .directory { padding: 0 24px 80px; }
+    footer { padding: 48px 24px; flex-direction: column; gap: 40px; }
+    .footer-bottom { padding: 24px; flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SKIP LINK -->
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">Onsite Ops <span>Quarterly</span></a>
+  <div class="nav-links">
+    <a href="index.html#categories">Coverage</a>
+    <a href="about.html">About</a>
+    <a href="index.html#contribute">Contribute</a>
+    <a href="index.html#subscribe" class="nav-subscribe">Subscribe</a>
+  </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html#categories">Coverage</a>
+  <a href="about.html">About</a>
+  <a href="index.html#contribute">Contribute</a>
+  <a href="index.html#subscribe" class="mobile-subscribe">Subscribe</a>
+</div>
+
+<!-- HEADER -->
+<header class="page-header" id="main-content">
+  <div class="page-header-label">Industry Directory</div>
+  <h1 class="page-header-title">Companies You Should Know</h1>
+  <p class="page-header-sub">The vendors, platforms, and service providers moving onsite operations forward.</p>
+</header>
+
+<!-- DIRECTORY -->
+<main class="directory">
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Venue Management & Operations</h2>
+    <ul class="dir-list">
+      <li><a href="https://legendsglobal.com/" target="_blank" rel="noopener">Legends Global</a></li>
+      <li><a href="https://www.oakviewgroup.com/" target="_blank" rel="noopener">Oak View Group (OVG)</a></li>
+      <li><a href="https://www.aegworldwide.com/" target="_blank" rel="noopener">AEG</a></li>
+      <li><a href="https://www.livenationentertainment.com/" target="_blank" rel="noopener">Live Nation Entertainment</a></li>
+      <li><a href="https://www.spectraexperiences.com/" target="_blank" rel="noopener">Spectra</a></li>
+      <li><a href="https://www.lazparking.com/our-company/parking-management-services/laz-live!-venue-and-event-services" target="_blank" rel="noopener">LAZ Live!</a></li>
+      <li><a href="https://populous.com/" target="_blank" rel="noopener">Populous</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Crowd Management & Flow</h2>
+    <ul class="dir-list">
+      <li><a href="https://www.aus.com/security-services/event-services/crowd-management-services" target="_blank" rel="noopener">Allied Universal Event Services</a></li>
+      <li><a href="https://best.garda.com/" target="_blank" rel="noopener">BEST Crowd Management</a></li>
+      <li><a href="https://pmygroup.com/" target="_blank" rel="noopener">PMY Group</a></li>
+      <li><a href="https://mapsted.com/" target="_blank" rel="noopener">Mapsted</a></li>
+      <li><a href="https://vettedsecuritysolutions.com/" target="_blank" rel="noopener">Vetted Security Solutions</a></li>
+      <li><a href="https://www.virtualvenue-events.com/" target="_blank" rel="noopener">Virtual Venue</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Logistics & Site Planning</h2>
+    <ul class="dir-list">
+      <li><a href="https://www.freeman.com/" target="_blank" rel="noopener">Freeman</a></li>
+      <li><a href="https://www.averittexpress.com/" target="_blank" rel="noopener">Averitt On Tour Logistics</a></li>
+      <li><a href="https://gogather.com/" target="_blank" rel="noopener">GoGather</a></li>
+      <li><a href="https://www.eventlogisticsinc.com/" target="_blank" rel="noopener">Event Logistics Inc.</a></li>
+      <li><a href="https://www.concertstuff.com/" target="_blank" rel="noopener">Concert Stuff Group</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Load In / Load Out & Staging</h2>
+    <ul class="dir-list">
+      <li><a href="https://www.rhinostaging.com/" target="_blank" rel="noopener">Rhino Staging</a></li>
+      <li><a href="https://upstagecompanies.com/" target="_blank" rel="noopener">Upstage Companies</a></li>
+      <li><a href="https://www.ses-av.com/" target="_blank" rel="noopener">Special Event Services</a></li>
+      <li><a href="https://www.g2structures.com/" target="_blank" rel="noopener">G2 Structures</a></li>
+      <li><a href="https://www.hdflooringsystems.com/" target="_blank" rel="noopener">HD Flooring</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Safety & Medical Ops</h2>
+    <ul class="dir-list">
+      <li><a href="https://crowdrx.org/" target="_blank" rel="noopener">CrowdRx</a></li>
+      <li><a href="https://www.preventems.com/" target="_blank" rel="noopener">Prevent Medical Solutions</a></li>
+      <li><a href="https://www.amr.net/services/event-medical" target="_blank" rel="noopener">AMR Event Medical</a></li>
+      <li><a href="https://www.globalmedicalresponse.com/services/event-medical" target="_blank" rel="noopener">Global Medical Response</a></li>
+      <li><a href="https://www.4emss.com/" target="_blank" rel="noopener">EMSS</a></li>
+      <li><a href="https://medcor.com/clinics/event-medical-support-services/" target="_blank" rel="noopener">Medcor</a></li>
+      <li><a href="https://www.accucareeventmedical.com/" target="_blank" rel="noopener">AccuCare Event Medical</a></li>
+      <li><a href="https://emsforevents.com/" target="_blank" rel="noopener">Event Medical Solutions</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Credentialing & Access Control</h2>
+    <ul class="dir-list">
+      <li><a href="https://www.starkrfid.com/" target="_blank" rel="noopener">STARK RFID</a></li>
+      <li><a href="https://www.wrstbnd.com/" target="_blank" rel="noopener">WRSTBND</a></li>
+      <li><a href="https://www.hidglobal.com/solutions/sports-and-event-management" target="_blank" rel="noopener">HID Global</a></li>
+      <li><a href="https://www.rfideas.com/solutions/events" target="_blank" rel="noopener">rf IDEAS</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Ticketing & Entry</h2>
+    <ul class="dir-list">
+      <li><a href="https://business.ticketmaster.com/" target="_blank" rel="noopener">Ticketmaster</a></li>
+      <li><a href="https://www.axs.com/" target="_blank" rel="noopener">AXS</a></li>
+      <li><a href="https://www.eventbrite.com/" target="_blank" rel="noopener">Eventbrite</a></li>
+      <li><a href="https://seatgeek.com/" target="_blank" rel="noopener">SeatGeek</a></li>
+      <li><a href="https://www.zicket.io/" target="_blank" rel="noopener">Zicket</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Technology & Data</h2>
+    <ul class="dir-list">
+      <li><a href="https://www.momentus.eu/" target="_blank" rel="noopener">Momentus Technologies</a></li>
+      <li><a href="https://venueops.com/" target="_blank" rel="noopener">VenueOps</a></li>
+      <li><a href="https://ungerboeck.com/" target="_blank" rel="noopener">Ungerboeck</a></li>
+      <li><a href="https://www.socialtables.com/" target="_blank" rel="noopener">Social Tables (Cvent)</a></li>
+      <li><a href="https://legendsglobal.com/" target="_blank" rel="noopener">Prism (by Legends)</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Parking & Transportation</h2>
+    <ul class="dir-list">
+      <li><a href="https://parkmobile.io/" target="_blank" rel="noopener">ParkMobile</a></li>
+      <li><a href="https://spothero.com/" target="_blank" rel="noopener">SpotHero</a></li>
+      <li><a href="https://www.lazparking.com/" target="_blank" rel="noopener">LAZ Parking</a></li>
+      <li><a href="https://www.spplus.com/" target="_blank" rel="noopener">SP+ (Metropolis)</a></li>
+      <li><a href="https://www.concertstuff.com/" target="_blank" rel="noopener">Special Event Transportation</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Event Production & Full-Service</h2>
+    <ul class="dir-list">
+      <li><a href="https://tseentertainment.com/" target="_blank" rel="noopener">TSE Entertainment</a></li>
+      <li><a href="https://www.jackmorton.com/" target="_blank" rel="noopener">Jack Morton Worldwide</a></li>
+      <li><a href="https://cpgagency.com/" target="_blank" rel="noopener">CPG Agency</a></li>
+      <li><a href="https://www.lailiveevents.com/" target="_blank" rel="noopener">LAI Live</a></li>
+      <li><a href="https://www.eventfuse.co/" target="_blank" rel="noopener">EventFuse</a></li>
+      <li><a href="https://dolosangeles.com/thedolab" target="_blank" rel="noopener">The Do LaB</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Merch Operations</h2>
+    <ul class="dir-list">
+      <li><a href="https://www.manheadmerch.com/" target="_blank" rel="noopener">Manhead Merch</a></li>
+      <li><a href="https://www.bioworldmerch.com/" target="_blank" rel="noopener">Bioworld</a></li>
+      <li><a href="https://www.musictoday.com/" target="_blank" rel="noopener">Musictoday</a></li>
+      <li><a href="https://www.sandbagheadquarters.com/" target="_blank" rel="noopener">Sandbag</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Experiential Advertising</h2>
+    <ul class="dir-list">
+      <li><a href="https://superfly.com/" target="_blank" rel="noopener">Superfly</a></li>
+      <li><a href="https://www.momentumww.com/" target="_blank" rel="noopener">Momentum Worldwide</a></li>
+      <li><a href="https://giantspoon.com/" target="_blank" rel="noopener">Giant Spoon</a></li>
+      <li><a href="https://www.invisiblenorth.com/" target="_blank" rel="noopener">Invisible North</a></li>
+      <li><a href="https://www.mkg.com/" target="_blank" rel="noopener">MKG</a></li>
+      <li><a href="https://goipme.com/" target="_blank" rel="noopener">IPME</a></li>
+      <li><a href="https://www.boilerroomcreative.com/" target="_blank" rel="noopener">Boiler Room Creative</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Trade Shows & Conventions</h2>
+    <ul class="dir-list">
+      <li><a href="https://pollstar.live/" target="_blank" rel="noopener">Pollstar Live!</a></li>
+      <li><a href="https://iavm.org/events/" target="_blank" rel="noopener">VenueConnect (IAVM)</a></li>
+      <li><a href="https://www.ldishow.com/" target="_blank" rel="noopener">LDI</a></li>
+      <li><a href="https://intix.org/" target="_blank" rel="noopener">INTIX Annual Conference</a></li>
+      <li><a href="https://ncs4.usm.edu/" target="_blank" rel="noopener">NCS4 Conference</a></li>
+      <li><a href="https://www.discoverisc.com/west/en-us.html" target="_blank" rel="noopener">ISC West</a></li>
+      <li><a href="https://www.eventsafetyalliance.org/" target="_blank" rel="noopener">Event Safety Alliance Conference</a></li>
+      <li><a href="https://www.imexamerica.com/" target="_blank" rel="noopener">IMEX America</a></li>
+      <li><a href="https://www.eventmarketer.com/event/experiential-marketing-summit-2026/" target="_blank" rel="noopener">Experiential Marketing Summit</a></li>
+      <li><a href="https://www.bizbash.com/" target="_blank" rel="noopener">BizBash Live</a></li>
+      <li><a href="https://catersource.com/" target="_blank" rel="noopener">Catersource + The Special Event</a></li>
+      <li><a href="https://www.iaee.com/" target="_blank" rel="noopener">IAEE Expo! Expo!</a></li>
+      <li><a href="https://www.exhibitoronline.com/" target="_blank" rel="noopener">Exhibitor Live</a></li>
+      <li><a href="https://www.ifea.com/" target="_blank" rel="noopener">IFEA Annual Convention</a></li>
+      <li><a href="https://www.sportseastward.com/" target="_blank" rel="noopener">TEAMS Conference</a></li>
+      <li><a href="https://www.eventtechlive.com/" target="_blank" rel="noopener">Event Tech Live</a></li>
+      <li><a href="https://www.ibtmworld.com/" target="_blank" rel="noopener">IBTM World</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Industry Associations</h2>
+    <ul class="dir-list">
+      <li><a href="https://www.iavm.org/" target="_blank" rel="noopener">IAVM</a></li>
+      <li><a href="https://www.intix.org/" target="_blank" rel="noopener">INTIX</a></li>
+      <li><a href="https://www.ifea.com/" target="_blank" rel="noopener">IFEA</a></li>
+      <li><a href="https://ncs4.usm.edu/" target="_blank" rel="noopener">NCS4</a></li>
+      <li><a href="https://www.eventsafetyalliance.org/" target="_blank" rel="noopener">Event Safety Alliance</a></li>
+      <li><a href="https://www.nfpa.org/" target="_blank" rel="noopener">NFPA</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Industry Publications</h2>
+    <ul class="dir-list">
+      <li><a href="https://www.pollstar.com/" target="_blank" rel="noopener">Pollstar</a></li>
+      <li><a href="https://www.venuesnow.com/" target="_blank" rel="noopener">VenuesNow</a></li>
+      <li><a href="https://www.venuestoday.com/" target="_blank" rel="noopener">Venues Today</a></li>
+      <li><a href="https://www.tsnn.com/" target="_blank" rel="noopener">TSNN</a></li>
+    </ul>
+  </div>
+
+  <div class="dir-category">
+    <h2 class="dir-category-title">Podcasts</h2>
+    <ul class="dir-list">
+      <li><a href="https://eventsafetypodcast.simplecast.com/" target="_blank" rel="noopener">The Event Safety Podcast</a></li>
+      <li><a href="https://www.mobilesportsreport.com/stadium-wi-fi-2/" target="_blank" rel="noopener">Stadium Tech Report</a></li>
+      <li><a href="https://broadcast2post.castos.com/" target="_blank" rel="noopener">Broadcast2Post</a></li>
+      <li><a href="https://www.bizbash.com/gathergeeks" target="_blank" rel="noopener">GatherGeeks</a></li>
+      <li><a href="https://meetings.skift.com/podcast/" target="_blank" rel="noopener">Skift Meetings</a></li>
+      <li><a href="https://www.bizzabo.com/blog/event-planning-podcasts" target="_blank" rel="noopener">Event Experience</a></li>
+      <li><a href="https://hirespace.com/eventlab" target="_blank" rel="noopener">EventLAB</a></li>
+      <li><a href="https://www.endless-events.com/event-tech-podcast" target="_blank" rel="noopener">Event Tech Podcast</a></li>
+      <li><a href="https://www.endless-events.com/event-brew" target="_blank" rel="noopener">Event Brew</a></li>
+      <li><a href="https://www.knownassociates.com.au/" target="_blank" rel="noopener">Behind the Clipboard</a></li>
+      <li><a href="https://www.eventmanagerblog.com/podcast" target="_blank" rel="noopener">Event Manager Podcast</a></li>
+      <li><a href="https://www.cvent.com/en/blog/events/how-great-events-happen-podcast" target="_blank" rel="noopener">How Great Events Happen</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-logo">Onsite Ops <span>Quarterly</span></div>
+    <div class="footer-tagline">The voice for the industry that's invisible by design.</div>
+  </div>
+  <div class="footer-links">
+    <div class="footer-col">
+      <h4>Publication</h4>
+      <a href="index.html#categories">Coverage</a>
+      <a href="about.html">About</a>
+      <a href="index.html#subscribe">Subscribe</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contribute</h4>
+      <a href="index.html#contribute">Submit a Story</a>
+      <a href="index.html#contribute">Tip Line</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="#">LinkedIn</a>
+      <a href="#">Instagram</a>
+      <a href="index.html#subscribe">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<div class="footer-bottom">
+  <span>&copy; 2026 Onsite Ops Quarterly</span>
+  <span>Independent &bull; Anonymous &bull; Unfiltered</span>
+</div>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    document.getElementById('navbar').classList.toggle('menu-open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.getElementById('navbar').classList.remove('menu-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+  });
+</script>
+
+</body>
+</html>

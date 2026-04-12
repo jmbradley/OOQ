@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Onsite Ops Quarterly</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ed;
+    --bg-warm: #eae6df;
+    --bg-card: #ffffff;
+    --bg-dark: #1c1c1c;
+    --text-primary: #1c1c1c;
+    --text-secondary: #5a5650;
+    --text-tertiary: #8a857e;
+    --border: #ddd8d0;
+    --border-light: #e8e4dc;
+    --accent: #b8935a;
+    --accent-hover: #a07e48;
+    --accent-light: rgba(184,147,90,0.1);
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Playfair Display', serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── SKIP LINK ─── */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 16px;
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    z-index: 200;
+    transition: top 0.2s;
+  }
+
+  .skip-link:focus { top: 16px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(245,242,237,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-light);
+    transition: all 0.4s ease;
+  }
+
+  nav.scrolled { padding: 14px 48px; }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.4s;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: var(--text-tertiary);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--text-primary); }
+  .nav-links a.active { color: var(--text-primary); }
+
+  .nav-subscribe {
+    background: var(--text-primary);
+    color: var(--bg) !important;
+    padding: 8px 20px;
+    font-weight: 700 !important;
+    transition: background 0.3s, transform 0.2s !important;
+  }
+
+  .nav-subscribe:hover {
+    background: var(--text-secondary);
+    transform: translateY(-1px);
+  }
+
+  /* ─── HAMBURGER ─── */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    z-index: 110;
+  }
+
+  .nav-hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--text-primary);
+    transition: transform 0.3s, opacity 0.3s, background 0.4s;
+  }
+
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Nav when mobile menu is open */
+  nav.menu-open {
+    background: var(--bg-dark) !important;
+    border-bottom-color: transparent !important;
+  }
+
+  nav.menu-open .nav-logo { color: #f0ede8; }
+  nav.menu-open .nav-hamburger span { background: #f0ede8; }
+
+  /* ─── MOBILE MENU ─── */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: var(--bg-dark);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+
+  .mobile-menu.open { opacity: 1; visibility: visible; }
+
+  .mobile-menu a {
+    color: rgba(240, 237, 232, 0.7);
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 16px 32px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s;
+  }
+
+  .mobile-menu a:hover { color: #f0ede8; }
+
+  .mobile-menu .mobile-subscribe {
+    margin-top: 16px;
+    background: var(--accent);
+    color: #fff;
+    padding: 16px 48px;
+    font-weight: 700;
+  }
+
+  .mobile-menu .mobile-subscribe:hover { background: var(--accent-hover); }
+
+  /* ─── ABOUT CONTENT ─── */
+  .about-hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 140px 48px 80px;
+  }
+
+  .about-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 40px;
+  }
+
+  .about-headline {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(28px, 4vw, 48px);
+    line-height: 1.3;
+    max-width: 680px;
+    color: var(--text-primary);
+    margin-bottom: 32px;
+  }
+
+  .about-gold {
+    color: var(--accent);
+  }
+
+  .about-iykyk {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    color: var(--text-tertiary);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 64px 48px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: var(--white);
+  }
+
+  .footer-brand { max-width: 300px; }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-tagline {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .footer-links { display: flex; gap: 48px; }
+
+  .footer-col h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .footer-col a {
+    display: block;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: color 0.3s;
+  }
+
+  .footer-col a:hover { color: var(--text-primary); }
+
+  .footer-bottom {
+    padding: 24px 48px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+    background: var(--white);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .mobile-menu { display: flex; }
+    .about-hero { padding: 120px 24px 80px; }
+    footer { padding: 48px 24px; flex-direction: column; gap: 40px; }
+    .footer-bottom { padding: 24px; flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SKIP LINK -->
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">Onsite Ops <span>Quarterly</span></a>
+  <div class="nav-links">
+    <a href="index.html#categories">Coverage</a>
+    <a href="about.html" class="active">About</a>
+    <a href="index.html#contribute">Contribute</a>
+    <a href="index.html#subscribe" class="nav-subscribe">Subscribe</a>
+  </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html#categories">Coverage</a>
+  <a href="about.html">About</a>
+  <a href="index.html#contribute">Contribute</a>
+  <a href="index.html#subscribe" class="mobile-subscribe">Subscribe</a>
+</div>
+
+<!-- ABOUT -->
+<main class="about-hero" id="main-content">
+  <div class="about-label">About</div>
+  <h1 class="about-headline">By Onsite Operations Professionals,<br><span class="about-gold">For Onsite Operations Professionals.</span></h1>
+  <div class="about-iykyk">IYKYK.</div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-logo">Onsite Ops <span>Quarterly</span></div>
+    <div class="footer-tagline">The voice for the industry that's invisible by design.</div>
+  </div>
+  <div class="footer-links">
+    <div class="footer-col">
+      <h4>Publication</h4>
+      <a href="index.html#categories">Coverage</a>
+      <a href="about.html">About</a>
+      <a href="index.html#subscribe">Subscribe</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contribute</h4>
+      <a href="index.html#contribute">Submit a Story</a>
+      <a href="index.html#contribute">Tip Line</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="#">LinkedIn</a>
+      <a href="#">Instagram</a>
+      <a href="index.html#subscribe">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<div class="footer-bottom">
+  <span>&copy; 2026 Onsite Ops Quarterly</span>
+  <span>Independent &bull; Anonymous &bull; Unfiltered</span>
+</div>
+
+<script>
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    document.getElementById('navbar').classList.toggle('menu-open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.getElementById('navbar').classList.remove('menu-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+  });
+</script>
+
+</body>
+</html>
