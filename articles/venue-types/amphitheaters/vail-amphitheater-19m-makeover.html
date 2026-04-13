@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vail's Iconic Amphitheater Swaps Its Orange Seats for a $19 Million Makeover — Onsite Ops Quarterly</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ed;
+    --bg-warm: #eae6df;
+    --bg-card: #ffffff;
+    --bg-dark: #1c1c1c;
+    --text-primary: #1c1c1c;
+    --text-secondary: #5a5650;
+    --text-tertiary: #8a857e;
+    --border: #ddd8d0;
+    --border-light: #e8e4dc;
+    --accent: #b8935a;
+    --accent-hover: #a07e48;
+    --accent-light: rgba(184,147,90,0.1);
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Playfair Display', serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── READING PROGRESS BAR ─── */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--accent);
+    z-index: 200;
+    width: 0%;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  /* ─── SKIP LINK ─── */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 16px;
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    z-index: 300;
+    transition: top 0.2s;
+  }
+
+  .skip-link:focus { top: 16px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: all 0.4s ease;
+  }
+
+  nav.scrolled {
+    padding: 14px 48px;
+    background: rgba(245,242,237,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #f0ede8;
+    text-decoration: none;
+    transition: color 0.4s;
+  }
+
+  nav.scrolled .nav-logo { color: var(--text-primary); }
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: rgba(240, 237, 232, 0.6);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: #f0ede8; }
+  nav.scrolled .nav-links a { color: var(--text-tertiary); }
+  nav.scrolled .nav-links a:hover { color: var(--text-primary); }
+
+  .nav-subscribe {
+    background: rgba(240, 237, 232, 0.15);
+    color: #f0ede8 !important;
+    padding: 8px 20px;
+    font-weight: 700 !important;
+    transition: background 0.3s, transform 0.2s, color 0.3s !important;
+  }
+
+  .nav-subscribe:hover {
+    background: rgba(240, 237, 232, 0.25);
+    transform: translateY(-1px);
+  }
+
+  nav.scrolled .nav-subscribe {
+    background: var(--text-primary);
+    color: var(--bg) !important;
+  }
+
+  nav.scrolled .nav-subscribe:hover {
+    background: var(--text-secondary);
+  }
+
+  nav.menu-open {
+    background: var(--bg-dark) !important;
+    border-bottom-color: transparent !important;
+  }
+
+  nav.menu-open .nav-logo { color: #f0ede8; }
+  nav.menu-open .nav-hamburger span { background: #f0ede8; }
+
+  /* ─── HAMBURGER ─── */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    z-index: 110;
+  }
+
+  .nav-hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: #f0ede8;
+    transition: transform 0.3s, opacity 0.3s, background 0.4s;
+  }
+
+  nav.scrolled .nav-hamburger span { background: var(--text-primary); }
+
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ─── MOBILE MENU ─── */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: var(--bg-dark);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+
+  .mobile-menu.open { opacity: 1; visibility: visible; }
+
+  .mobile-menu a {
+    color: rgba(240, 237, 232, 0.7);
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 16px 32px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s;
+  }
+
+  .mobile-menu a:hover { color: #f0ede8; }
+
+  .mobile-menu .mobile-subscribe {
+    margin-top: 16px;
+    background: var(--accent);
+    color: #fff;
+    padding: 16px 48px;
+    font-weight: 700;
+  }
+
+  .mobile-menu .mobile-subscribe:hover { background: var(--accent-hover); }
+
+  /* ─── ARTICLE HERO ─── */
+  .article-hero {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 80px 48px;
+    position: relative;
+    background: url('../../../images/articles/amphitheaters/vail-amphitheater-19m-makeover-hero.jpg') center center / cover no-repeat;
+  }
+
+  .article-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(20,18,15,0.88) 0%, rgba(20,18,15,0.5) 50%, rgba(20,18,15,0.3) 100%);
+    z-index: 1;
+  }
+
+  .article-hero > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  .article-hero-content {
+    max-width: 800px;
+  }
+
+  .article-category {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(184,147,90,0.4);
+    padding: 6px 16px;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+
+  .article-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: #f0ede8;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.5s;
+  }
+
+  .article-deck {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: rgba(240, 237, 232, 0.7);
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.7s;
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: rgba(240, 237, 232, 0.5);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.9s;
+  }
+
+  .article-meta-sep { opacity: 0.3; }
+
+  .article-hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    right: 48px;
+    writing-mode: vertical-rl;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(240, 237, 232, 0.5);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.1s;
+  }
+
+  .article-hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: var(--accent);
+    margin-top: 12px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: scrollPulse 2s ease infinite;
+  }
+
+  .article-hero-divider {
+    position: absolute;
+    bottom: 0;
+    left: 48px;
+    right: 48px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent 60%);
+    z-index: 2;
+  }
+
+  /* ─── SHARE BAR ─── */
+  .share-bar {
+    position: fixed;
+    left: calc(50% - 440px);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 50;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s;
+  }
+
+  .share-bar.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .share-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    position: relative;
+  }
+
+  .share-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .share-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .share-btn-tooltip {
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--bg-dark);
+    color: #f0ede8;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    padding: 6px 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .share-btn-tooltip.show { opacity: 1; }
+
+  /* ─── ARTICLE BODY ─── */
+  .article-body {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 24px 48px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+  }
+
+  .article-body p + p { margin-top: 24px; }
+
+  .article-lead::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 4em;
+    float: left;
+    line-height: 0.8;
+    padding-right: 12px;
+    padding-top: 6px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .article-body h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 64px 0 24px;
+    color: var(--text-primary);
+    line-height: 1.25;
+  }
+
+  .article-h2-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    margin-right: 16px;
+    position: relative;
+    top: -2px;
+  }
+
+  /* ─── PULL QUOTES ─── */
+  .article-pullquote {
+    margin: 56px -60px;
+    padding: 0 0 0 32px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .article-pullquote p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 24px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .article-pullquote cite {
+    display: block;
+    margin-top: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-style: normal;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  /* ─── INLINE IMAGES ─── */
+  .article-figure {
+    margin: 48px -60px;
+  }
+
+  .article-figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .article-figure figcaption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+    line-height: 1.6;
+  }
+
+  /* ─── CALLOUT / STAT BOXES ─── */
+  .article-callout {
+    background: var(--bg-dark);
+    color: #f0ede8;
+    padding: 56px 48px;
+    margin: 56px -60px;
+    text-align: center;
+  }
+
+  .article-callout-stat {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .article-callout-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240, 237, 232, 0.6);
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ─── TAGS ─── */
+  .article-tags {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 64px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-top: 1px solid var(--border-light);
+    padding-top: 32px;
+  }
+
+  .article-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    color: var(--text-tertiary);
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .article-tag:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ─── RELATED ARTICLES ─── */
+  .related-articles {
+    padding: 80px 48px;
+    border-top: 1px solid var(--border-light);
+    background: var(--white);
+  }
+
+  .related-header {
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border-light);
+  }
+
+  .related-card {
+    background: var(--white);
+    text-decoration: none;
+    display: block;
+    transition: background 0.4s;
+  }
+
+  .related-card:hover { background: #faf9f6; }
+
+  .related-card-img {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--bg-warm);
+  }
+
+  .related-card-body { padding: 32px; }
+
+  .related-card-category {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .related-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .related-card-excerpt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .related-card-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── SUBSCRIBE ─── */
+  .subscribe {
+    padding: 120px 48px;
+    background: var(--bg);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .subscribe-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    margin-bottom: 20px;
+    line-height: 1.1;
+    color: var(--text-primary);
+  }
+
+  .subscribe-body {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 440px;
+  }
+
+  .subscribe-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 460px;
+  }
+
+  .subscribe-form input {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .subscribe-form input::placeholder { color: var(--text-tertiary); }
+  .subscribe-form input:focus { border-color: var(--accent); }
+  .subscribe-form button { align-self: flex-start; }
+
+  .subscribe-note {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-primary {
+    background: var(--text-primary);
+    color: var(--bg);
+    padding: 16px 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+
+  .btn-primary:hover {
+    background: var(--text-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(28,28,28,0.12);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 64px 48px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: var(--white);
+  }
+
+  .footer-brand { max-width: 300px; }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-tagline {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .footer-links { display: flex; gap: 48px; }
+
+  .footer-col h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .footer-col a {
+    display: block;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: color 0.3s;
+  }
+
+  .footer-col a:hover { color: var(--text-primary); }
+
+  .footer-bottom {
+    padding: 24px 48px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+    background: var(--white);
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1200px) {
+    .share-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: auto;
+      bottom: 0;
+      transform: none;
+      flex-direction: row;
+      justify-content: center;
+      background: var(--white);
+      border-top: 1px solid var(--border-light);
+      padding: 12px;
+      gap: 16px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+    }
+
+    .share-btn-tooltip { display: none; }
+  }
+
+  @media (max-width: 1024px) {
+    .related-grid { grid-template-columns: repeat(2, 1fr); }
+    .subscribe { grid-template-columns: 1fr; gap: 48px; }
+    .article-pullquote,
+    .article-figure,
+    .article-callout { margin-left: 0; margin-right: 0; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .mobile-menu { display: flex; }
+
+    .article-hero { padding: 100px 24px 60px; min-height: 60vh; }
+    .article-hero-scroll { display: none; }
+    .article-hero-divider { left: 24px; right: 24px; }
+    .article-title { margin-bottom: 16px; }
+    .article-deck { font-size: 17px; margin-bottom: 20px; }
+    .article-meta { flex-wrap: wrap; gap: 8px; }
+
+    .article-body { padding: 56px 20px 48px; font-size: 17px; }
+
+    .article-pullquote { margin: 40px 0; }
+    .article-pullquote p { font-size: 20px; }
+
+    .article-figure { margin: 40px -20px; }
+    .article-figure figcaption { padding-left: 20px; padding-right: 20px; }
+
+    .article-callout { margin: 40px -20px; padding: 40px 24px; }
+    .article-callout-stat { font-size: 56px; }
+
+    .article-tags { padding: 24px 20px 48px; }
+
+    .related-articles { padding: 60px 24px; }
+    .related-grid { grid-template-columns: 1fr; }
+
+    .subscribe { padding: 80px 24px; }
+    .subscribe-form input {
+      padding: 16px 20px;
+      font-size: 16px;
+      min-height: 52px;
+    }
+    .subscribe-form button {
+      min-height: 52px;
+      width: 100%;
+    }
+
+    footer { padding: 48px 24px; flex-direction: column; gap: 40px; }
+    .footer-bottom { padding: 24px; flex-direction: column; gap: 8px; }
+
+    .share-bar { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+  }
+</style>
+</head>
+<body>
+
+<!-- READING PROGRESS BAR -->
+<div class="progress-bar" id="progress-bar"></div>
+
+<!-- SKIP LINK -->
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="../../../index.html" class="nav-logo">Onsite Ops <span>Quarterly</span></a>
+  <div class="nav-links">
+    <a href="../../../index.html#categories">Coverage</a>
+    <a href="../../../about.html">About</a>
+    <a href="../../../index.html#contribute">Contribute</a>
+    <a href="../../../index.html#subscribe" class="nav-subscribe">Subscribe</a>
+  </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+  <a href="../../../index.html#categories">Coverage</a>
+  <a href="../../../about.html">About</a>
+  <a href="../../../index.html#contribute">Contribute</a>
+  <a href="../../../index.html#subscribe" class="mobile-subscribe">Subscribe</a>
+</div>
+
+<!-- ARTICLE HERO -->
+<header class="article-hero" id="main-content">
+  <div class="article-hero-content">
+    <span class="article-category">Amphitheaters</span>
+    <h1 class="article-title">Vail's Iconic Amphitheater Swaps Its Orange Seats for a $19 Million Makeover</h1>
+    <p class="article-deck">The Gerald R. Ford Amphitheater debuts new seating, structural upgrades, and the first phase of a multi-year transformation funded by a $74 million capital campaign.</p>
+    <div class="article-meta">
+      <span class="article-author">Anonymous</span>
+      <span class="article-meta-sep">&bull;</span>
+      <time class="article-date" datetime="2026-04-13">April 13, 2026</time>
+      <span class="article-meta-sep">&bull;</span>
+      <span class="article-readtime">2 min read</span>
+    </div>
+  </div>
+  <div class="article-hero-scroll">Scroll</div>
+  <div class="article-hero-divider"></div>
+</header>
+
+<!-- SHARE BAR -->
+<aside class="share-bar" id="share-bar" aria-label="Share this article">
+  <button class="share-btn" data-action="copy" aria-label="Copy link">
+    <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+    <span class="share-btn-tooltip" id="copy-tooltip">Copy link</span>
+  </button>
+  <a class="share-btn" data-action="twitter" aria-label="Share on X" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24"><path d="M4 4l6.5 8L4 20h2l5.5-6.8L16 20h4l-6.8-8.5L19.5 4H18l-5 6.2L9 4H4z"/></svg>
+  </a>
+  <a class="share-btn" data-action="linkedin" aria-label="Share on LinkedIn" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+  </a>
+  <a class="share-btn" data-action="email" aria-label="Share via email" href="#">
+    <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg>
+  </a>
+</aside>
+
+<!-- ARTICLE BODY -->
+<article class="article-body">
+
+  <p class="article-lead">The Gerald R. Ford Amphitheater in Vail debuted brand-new pavilion seating this weekend as the Apr&egrave;s at The Amp music festival brought Ti&euml;sto, Purple Disco Machine, and LP Giobbi to the mountains for two nights of electronic music on April 10&ndash;11.</p>
+
+  <p>Festival-goers were the first to sit in the new myrtle green seats &mdash; upholstered with cushions and cup holders, 100% fabricated in the United States, and replacing the original orange seats installed by Irwin Seating Company back in 1983. The swap is the first visible piece of a $19 million multi-year transformation of one of Colorado's most iconic outdoor venues.</p>
+
+  <p>Phase one also included concrete repairs, fresh paint, no-slip texturing, an expanded production booth, and new hand railings. By May 2028, the full renovation will deliver remodeled concessions, enhanced green rooms and dressing rooms, box office upgrades, a new multi-use studio and event space, expanded storage, and improvements to lighting, acoustics, and office spaces.</p>
+
+  <p>The upgrades are part of the Vail Valley Foundation's $74 million Empowering Possibility Capital Campaign, which supports arts, athletics, education, and community services across the Eagle River Valley. The campaign has already raised more than $40 million toward its goal.</p>
+
+  <p>All construction is being phased during winter off-seasons to avoid disrupting summer performance schedules &mdash; including the Bravo! Vail Music Festival and Vail Dance Festival. The goal: position The Amp to attract the world's biggest artists while meeting modern production and guest experience standards.</p>
+
+  <p style="margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border-light); font-size: 13px; color: var(--text-tertiary); font-style: italic;">Based on reporting by Vail Daily: <a href="https://www.vaildaily.com/news/gerald-r-ford-amphitheater-debuts-new-seats-for-apres-at-the-amp-music-festival-this-weekend/" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: none;">Gerald R. Ford Amphitheater debuts new seats for Apr&egrave;s at The Amp</a></p>
+
+</article>
+
+<!-- TAGS -->
+<div class="article-tags">
+  <a href="#" class="article-tag">Amphitheater Operations</a>
+  <a href="#" class="article-tag">Venue Renovation</a>
+  <a href="#" class="article-tag">Seating</a>
+  <a href="#" class="article-tag">Colorado</a>
+  <a href="#" class="article-tag">Capital Campaigns</a>
+  <a href="#" class="article-tag">Gerald R. Ford Amphitheater</a>
+</div>
+
+<!-- RELATED ARTICLES -->
+<section class="related-articles reveal">
+  <div class="related-header">
+    <div class="section-label">More in Amphitheaters</div>
+  </div>
+  <div class="related-grid">
+    <a href="cleveland-riverfront-amphitheater.html" class="related-card">
+      <div class="related-card-img" style="background-image: url('../../../images/articles/amphitheaters/cleveland-riverfront-amphitheater-hero.jpg');"></div>
+      <div class="related-card-body">
+        <span class="related-card-category">Amphitheaters</span>
+        <h3 class="related-card-title">Cleveland's Riverfront Is Getting a 6,200-Seat Amphitheater</h3>
+        <p class="related-card-excerpt">Bedrock and Live Nation plan a new outdoor venue on the Cuyahoga River as part of a $3.5 billion redevelopment.</p>
+        <span class="related-card-meta">Anonymous &bull; 2 min read</span>
+      </div>
+    </a>
+    <a href="willmar-minnesota-amphitheater.html" class="related-card">
+      <div class="related-card-img" style="background-image: url('../../../images/articles/amphitheaters/willmar-minnesota-amphitheater-hero.jpg');"></div>
+      <div class="related-card-body">
+        <span class="related-card-category">Amphitheaters</span>
+        <h3 class="related-card-title">Willmar, Minnesota, Is Building a Two-Stage Amphitheater on an Island</h3>
+        <p class="related-card-excerpt">A butterfly-roof design with dual stages at Robbins Island Regional Park, funded by grants and community contributions.</p>
+        <span class="related-card-meta">Anonymous &bull; 2 min read</span>
+      </div>
+    </a>
+    <a href="north-las-vegas-amphitheater-renovation.html" class="related-card">
+      <div class="related-card-img" style="background-image: url('../../../images/articles/amphitheaters/north-las-vegas-amphitheater-renovation-hero.jpg');"></div>
+      <div class="related-card-body">
+        <span class="related-card-category">Amphitheaters</span>
+        <h3 class="related-card-title">North Las Vegas Unveils a Renovated Amphitheater at Craig Ranch Park</h3>
+        <p class="related-card-excerpt">A free concert kicked off the newly upgraded venue with plans for near-weekly programming.</p>
+        <span class="related-card-meta">Anonymous &bull; 1 min read</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- SUBSCRIBE -->
+<section class="subscribe reveal" id="subscribe">
+  <div class="subscribe-left">
+    <div class="section-label">Stay Connected</div>
+    <h2 class="subscribe-title">Get OOQ in<br>your inbox.</h2>
+    <p class="subscribe-body">Occasional dispatches. No spam, no fluff, no sponsored content disguised as editorial. Just the work.</p>
+  </div>
+  <div>
+    <form class="subscribe-form" id="subscribe-form">
+      <input type="text" name="metadata__name" placeholder="Your name (optional)">
+      <input type="email" name="email" placeholder="Email address" required>
+      <input type="text" name="metadata__role" placeholder="Role / title (optional)">
+      <button class="btn-primary" type="submit">Subscribe</button>
+      <div class="subscribe-note" id="subscribe-status">Your information stays with us. Always.</div>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-logo">Onsite Ops <span>Quarterly</span></div>
+    <div class="footer-tagline">The voice for the industry that's invisible by design.</div>
+  </div>
+  <div class="footer-links">
+    <div class="footer-col">
+      <h4>Publication</h4>
+      <a href="../../../index.html#categories">Coverage</a>
+      <a href="../../../about.html">About</a>
+      <a href="../../../index.html#subscribe">Subscribe</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contribute</h4>
+      <a href="../../../index.html#contribute">Submit a Story</a>
+      <a href="../../../index.html#contribute">Tip Line</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="#">LinkedIn</a>
+      <a href="#">Instagram</a>
+      <a href="../../../index.html#subscribe">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<div class="footer-bottom">
+  <span>&copy; 2026 Onsite Ops Quarterly</span>
+  <span>Independent &bull; Anonymous &bull; Unfiltered</span>
+</div>
+
+<script>
+  // ─── Hamburger menu ───
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    document.getElementById('navbar').classList.toggle('menu-open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.getElementById('navbar').classList.remove('menu-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // ─── Buttondown subscribe form ───
+  document.getElementById('subscribe-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const status = document.getElementById('subscribe-status');
+    const email = form.email.value.trim();
+    const name = form.metadata__name.value.trim();
+    const role = form.metadata__role.value.trim();
+
+    if (!email) return;
+
+    status.textContent = 'Subscribing...';
+    form.querySelector('button').disabled = true;
+
+    try {
+      const body = new URLSearchParams();
+      body.append('email', email);
+      if (name) body.append('metadata__name', name);
+      if (role) body.append('metadata__role', role);
+
+      const res = await fetch('https://buttondown.com/api/emails/embed-subscribe/MemeticLeads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString()
+      });
+
+      if (res.ok || res.status === 201) {
+        status.textContent = 'You\'re in. Check your email to confirm.';
+        status.style.color = 'var(--accent)';
+        form.reset();
+      } else {
+        const data = await res.json().catch(() => null);
+        status.textContent = data?.detail || 'Something went wrong. Try again.';
+        status.style.color = '#c0392b';
+      }
+    } catch {
+      status.textContent = 'Connection error. Try again.';
+      status.style.color = '#c0392b';
+    }
+
+    form.querySelector('button').disabled = false;
+  });
+
+  // ─── Nav scroll transition ───
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ─── Reading progress bar ───
+  const progressBar = document.getElementById('progress-bar');
+  const articleBody = document.querySelector('.article-body');
+
+  function updateProgress() {
+    const articleTop = articleBody.offsetTop;
+    const articleHeight = articleBody.offsetHeight;
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const progress = Math.min(1, Math.max(0,
+      (scrollY - articleTop + windowHeight * 0.5) / articleHeight
+    ));
+    progressBar.style.width = (progress * 100) + '%';
+  }
+
+  window.addEventListener('scroll', updateProgress);
+  updateProgress();
+
+  // ─── Share bar visibility ───
+  const shareBar = document.getElementById('share-bar');
+  const articleHero = document.querySelector('.article-hero');
+  const articleTags = document.querySelector('.article-tags');
+
+  const heroObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) {
+        shareBar.classList.add('visible');
+      } else {
+        shareBar.classList.remove('visible');
+      }
+    });
+  }, { threshold: 0 });
+
+  const footerObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        shareBar.classList.remove('visible');
+      }
+    });
+  }, { threshold: 0 });
+
+  heroObserver.observe(articleHero);
+  footerObserver.observe(articleTags);
+
+  // ─── Share actions ───
+  const pageUrl = encodeURIComponent(window.location.href);
+  const pageTitle = encodeURIComponent(document.title);
+
+  document.querySelector('[data-action="twitter"]').href =
+    'https://twitter.com/intent/tweet?url=' + pageUrl + '&text=' + pageTitle;
+
+  document.querySelector('[data-action="linkedin"]').href =
+    'https://www.linkedin.com/sharing/share-offsite/?url=' + pageUrl;
+
+  document.querySelector('[data-action="email"]').href =
+    'mailto:?subject=' + pageTitle + '&body=' + pageUrl;
+
+  document.querySelector('[data-action="copy"]').addEventListener('click', async () => {
+    const tooltip = document.getElementById('copy-tooltip');
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      tooltip.textContent = 'Copied!';
+      tooltip.classList.add('show');
+      setTimeout(() => {
+        tooltip.classList.remove('show');
+        tooltip.textContent = 'Copy link';
+      }, 2000);
+    } catch {
+      tooltip.textContent = 'Failed';
+      tooltip.classList.add('show');
+      setTimeout(() => {
+        tooltip.classList.remove('show');
+        tooltip.textContent = 'Copy link';
+      }, 2000);
+    }
+  });
+
+  // ─── Reveal animations ───
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
