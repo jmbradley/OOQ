@@ -1,3 +1,8 @@
+---
+name: publish-article
+description: Publish an article to the Onsite Ops Quarterly site. Handles content parsing, hero image compression, HTML generation, and git push.
+---
+
 # /publish-article
 
 Publish a new article to the Onsite Ops Quarterly site.
